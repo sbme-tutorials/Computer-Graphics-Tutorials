@@ -1,68 +1,19 @@
-
-/* Copyright (c) Mark J. Kilgard, 1994. */
-
-/**
- * (c) Copyright 1993, Silicon Graphics, Inc.
- * ALL RIGHTS RESERVED 
- * Permission to use, copy, modify, and distribute this software for 
- * any purpose and without fee is hereby granted, provided that the above
- * copyright notice appear in all copies and that both the copyright notice
- * and this permission notice appear in supporting documentation, and that 
- * the name of Silicon Graphics, Inc. lastquat,not be used in advertising
- * or publicity pertaining to distribution of the software without specific,
- * written prior permission. 
- *
- * THE MATERIAL EMBODIED ON THIS SOFTWARE IS PROVIDED TO YOU "AS-IS"
- * AND WITHOUT WARRANTY OF ANY KIND, EXPRESS, IMPLIED OR OTHERWISE,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY OR
- * FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL SILICON
- * GRAPHICS, INC.  BE LIABLE TO YOU OR ANYONE ELSE FOR ANY DIRECT,
- * SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY
- * KIND, OR ANY DAMAGES WHATSOEVER, INCLUDING WITHOUT LIMITATION,
- * LOSS OF PROFIT, LOSS OF USE, SAVINGS OR REVENUE, OR THE CLAIMS OF
- * THIRD PARTIES, WHETHER OR NOT SILICON GRAPHICS, INC.  HAS BEEN
- * ADVISED OF THE POSSIBILITY OF SUCH LOSS, HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE
- * POSSESSION, USE OR PERFORMANCE OF THIS SOFTWARE.
- * 
- * US Government Users Restricted Rights 
- * Use, duplication, or disclosure by the Government is subject to
- * restrictions set forth in FAR 52.227.19(c)(2) or subparagraph
- * (c)(1)(ii) of the Rights in Technical Data and Computer Software
- * clause at DFARS 252.227-7013 and/or in similar or successor
- * clauses in the FAR or the DOD or NASA FAR Supplement.
- * Unpublished-- rights reserved under the copyright laws of the
- * United States.  Contractor/manufacturer is Silicon Graphics,
- * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
- *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
- */
-/*
- *  scene.c
- *  This program demonstrates the use of the GL lighting model.
- *  Objects are drawn using a grey material characteristic. 
- *  A single light source illuminates the objects.
- */
-#include <stdlib.h>
 #include <GL/glut.h>
+static int year = 0, day = 0;
 
-/*  Initialize material property and light source.
- */
-
-GLfloat angle = 0.0; /* Angle of rotation for object. */
-int moving, begin;   /* For interactive object rotation. */
-
-void myinit(void)
+void init(void)
 {
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glShadeModel(GL_SMOOTH);
     GLfloat light_ambient[] =
         {0.0, 0.0, 0.0, 1.0};
     GLfloat light_diffuse[] =
-        {1.0, 0.0, 0.0, 1.0};
+        {1.0, 1.0, 0.0, 1.0};
     GLfloat light_specular[] =
         {1.0, 1.0, 1.0, 1.0};
     /* light_position is NOT default value */
     GLfloat light_position[] =
-        {1.0, 1.0, 1.0, 0.0};
+        {0.0, 0.0, 4.0, 1.0};
 
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
@@ -76,103 +27,61 @@ void myinit(void)
 
 void display(void)
 {
-    glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glColor3f(1.0, 1.0, 1.0);
 
     glPushMatrix();
-    glRotatef(angle, 0.0, 1.0, 0.0);
-    glutSolidTeapot(1.5);
+    glRotatef(90.0, 1.0, 0.0, 0.0);
+    glutWireSphere(1, 20, 16); /* draw sun */
+    glRotatef((GLfloat)year, 0.0, 1.0, 0.0);
+    glTranslatef(2.0, 0.0, 0.0);
+    glRotatef((GLfloat)day, 0.0, 1.0, 0.0);
+    glutWireSphere(0.2, 20, 8); /* draw smaller planet */
     glPopMatrix();
-    glFlush();
-}
-void mouse(int button, int state, int x, int y)
-{
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-    {
-        moving = 1;
-        begin = x;
-    }
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
-    {
-        moving = 0;
-    }
+    glutSwapBuffers();
 }
 
-void motion(int x, int y)
+void timer(int value)
 {
-    if (moving)
+    if (value == 0)
     {
-        angle = angle + (x - begin);
-        begin = x;
+        day = (day + 1) % 360;
         glutPostRedisplay();
+        glutTimerFunc(10, timer, 0);
+
+    }
+    else if (value == 1)
+    {
+        year = (year + 1) % 360;
+        glutPostRedisplay();
+        glutTimerFunc(10, timer, 1);
     }
 }
 
-void myReshape(int w, int h)
+void reshape(int w, int h)
 {
-    glViewport(0, 0, w, h);
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    if (w <= h)
-        glOrtho(-2.5, 2.5, -2.5 * (GLfloat)h / (GLfloat)w,
-                2.5 * (GLfloat)h / (GLfloat)w, -10.0, 10.0);
-    else
-        glOrtho(-2.5 * (GLfloat)w / (GLfloat)h,
-                2.5 * (GLfloat)w / (GLfloat)h, -2.5, 2.5, -10.0, 10.0);
+    gluPerspective(70.0, (GLfloat)w / (GLfloat)h, 1.0, 20.0);
     glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
-void polygon_mode(int value)
-{
-    switch (value)
-    {
-    case 1:
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        break;
-    case 2:
-        glLineWidth(1);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        break;
-    case 3:
-        glPointSize(1.5);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-        break;
-    }
-    glutPostRedisplay();
-}
-
-void main_menu(int value)
-{
-    if (value == 666)
-        exit(0);
-}
-
-/*  Main Loop
- *  Open window with initial window size, title bar, 
- *  RGBA display mode, and handle input events.
- */
 int main(int argc, char **argv)
 {
-    int submenu;
-
     glutInit(&argc, argv);
-    glutInitWindowPosition(500, 500);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(500, 500);
+    glutInitWindowPosition(100, 100);
+    glutTimerFunc(0, timer, 0);
+    glutTimerFunc(0, timer, 1);
     glutCreateWindow(argv[0]);
-    glutMouseFunc(mouse);
-    glutMotionFunc(motion);
-    myinit();
-    glutReshapeFunc(myReshape);
+  
+    init();
     glutDisplayFunc(display);
-    submenu = glutCreateMenu(polygon_mode);
-    glutAddMenuEntry("Filled", 1);
-    glutAddMenuEntry("Line", 2);
-    glutAddMenuEntry("Point", 3);
-
-    glutCreateMenu(main_menu);
-    glutAddMenuEntry("Quit", 666);
-    glutAddSubMenu("Polygon mode", submenu);
-    glutAttachMenu(GLUT_RIGHT_BUTTON);
+    glutReshapeFunc(reshape);
     glutMainLoop();
-    return 0; 
+    return 0;
 }
