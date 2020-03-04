@@ -46,6 +46,12 @@
 #include <stdlib.h>
 
 static int shoulder = 0, elbow = 0, fingerBase = 0, fingerUp = 0;
+int moving, startx, starty;
+
+
+GLfloat angle = 0.0;   /* in degrees */
+GLfloat angle2 = 0.0;   /* in degrees */
+
 
 void init(void)
 {
@@ -57,23 +63,25 @@ void display(void)
 {
    glClear(GL_COLOR_BUFFER_BIT);
    glPushMatrix();
+   glRotatef(angle2, 1.0, 0.0, 0.0);
+   glRotatef(angle, 0.0, 1.0, 0.0);
    glTranslatef (-1.0, 0.0, 0.0);
    glRotatef ((GLfloat) shoulder, 0.0, 0.0, 1.0);
    glTranslatef (1.0, 0.0, 0.0);
    glPushMatrix();
-   glScalef (2.0, 0.4, 1.0);
+   glScalef (2.0, 0.6, 1.0);
    glutWireCube (1.0);
    glPopMatrix();
    glTranslatef (1.0, 0.0, 0.0);
    glRotatef ((GLfloat) elbow, 0.0, 0.0, 1.0);
    glTranslatef (1.0, 0.0, 0.0);
    glPushMatrix();
-   glScalef (2.0, 0.4, 1.0);
+   glScalef (2.0, 0.6, 1.0);
    glutWireCube (1.0);
    glPopMatrix();
 
    //Draw finger flang 1 
-   glTranslatef(1.15, 0.0, 0.0);
+   glTranslatef(1.0, 0.0, 0.0);
    glRotatef((GLfloat)fingerBase, 0.0, 0.0, 1.0);
    glTranslatef(0.15, 0.0, 0.0);
    glPushMatrix();
@@ -100,7 +108,7 @@ void reshape(int w, int h)
    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   gluPerspective(65.0, (GLfloat)w / (GLfloat)h, 1.0, 20.0);
+   gluPerspective(85.0, (GLfloat)w / (GLfloat)h, 1.0, 20.0);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
    glTranslatef(0.0, 0.0, -5.0);
@@ -151,6 +159,34 @@ void keyboard(unsigned char key, int x, int y)
    }
 }
 
+static void mouse(int button, int state, int x, int y)
+{
+  if (button == GLUT_LEFT_BUTTON) {
+    if (state == GLUT_DOWN) {
+      moving = 1;
+      startx = x;
+      starty = y;
+    }
+    if (state == GLUT_UP) {
+      moving = 0;
+    }
+  }
+}
+
+
+static void motion(int x, int y)
+{
+  if (moving) {
+    angle = angle + (x - startx);
+    angle2 = angle2 + (y - starty);
+    startx = x;
+    starty = y;
+    glutPostRedisplay();
+  }
+}
+
+
+
 int main(int argc, char **argv)
 {
    glutInit(&argc, argv);
@@ -159,6 +195,8 @@ int main(int argc, char **argv)
    glutInitWindowPosition(100, 100);
    glutCreateWindow(argv[0]);
    init();
+   glutMouseFunc(mouse);
+   glutMotionFunc(motion);
    glutDisplayFunc(display);
    glutReshapeFunc(reshape);
    glutKeyboardFunc(keyboard);
