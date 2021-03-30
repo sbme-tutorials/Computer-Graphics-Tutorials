@@ -7,7 +7,7 @@ float center[] = {0.0, 0.0, 0.0};
 float up[] = {0.0, 1.0, 0.0};
 float translationx = 0.0;
 float scale = 1;
-float rotation = 0.0;
+float rotation = 45.0;
 int rotateFirst = 0;
 
 void display()
@@ -15,22 +15,9 @@ void display()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glLoadIdentity();
-  glRotatef(rotation, 0.0, 0.0, 1.0);
-  glTranslatef(translationx, 0.0, 0.0);
-  glPushMatrix();
-  glLoadIdentity();
-  glTranslatef(translationx, 0.0, 0.0);
-  glRotatef(rotation, 0.0, 0.0, 1.0);
-  if (rotateFirst == 0)
-  {
-    glPopMatrix();
-    glutSolidCube(scale);
-  }
-  else
-  {
-    glutSolidCube(scale);
-    glPopMatrix();
-  }
+  glTranslatef(1.0, 0.0, 0.0);
+  glRotatef(135.0, 0.0, 0.0, 1.0);
+  glutSolidCube(scale);
   glutSwapBuffers();
 }
 
@@ -38,34 +25,23 @@ void keyboard(unsigned char key, int x, int y)
 {
   switch (key)
   {
-  case '0':
-    translationx = 0.0;
-    rotation = 0.0;
-    rotateFirst = 0;
-    glutPostRedisplay();
-    break;
   case '1':
-    translationx += 0.05;
-    glutPostRedisplay();
-    break;
-  case '!':
-    translationx -= 0.05;
+    translationx += 0.01;
     glutPostRedisplay();
     break;
   case '2':
-    rotation += 5;
-    glutPostRedisplay();
-    break;
-  case '@':
-    rotation -= 5;
+    scale *= 1.1;
     glutPostRedisplay();
     break;
   case '3':
+    rotation += 5;
+    glutPostRedisplay();
+    break;
+  case '4':
+    if (rotateFirst == 0)
       rotateFirst = 1;
-      break;
-  case '#':
+    else
       rotateFirst = 0;
-      break;
   }
 }
 void init()
