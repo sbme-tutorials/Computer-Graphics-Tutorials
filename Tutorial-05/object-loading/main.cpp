@@ -7,7 +7,7 @@
 double eye[] = {0, 0, 1};
 double center[] = {0, 0, 0};
 double up[] = {0, 1, 0};
-char *modelname = "data/al.obj";
+char *modelname = (char *)"data/al.obj";
 
 GLfloat light_ambient[] = {0.0, 0.0, 0.0, 0.0};
 GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
@@ -172,16 +172,16 @@ void screen_menu(int value)
 	switch (value)
 	{
 	case '1':
-		modelname = "data/al.obj";
+		modelname = (char *)"data/al.obj";
 		break;
 	case '2':
-		modelname = "data/soccerball.obj";
+		modelname = (char *)"data/soccerball.obj";
 		break;
 	case '3':
-		modelname = "data/rose+vase.obj";
+		modelname = (char *)"data/rose+vase.obj";
 		break;
 	case '4':
-		modelname = "data/apple-ibook-2001.obj";
+		modelname = (char *)"data/apple-ibook-2001.obj";
 		break;
 	}
 	reset();
