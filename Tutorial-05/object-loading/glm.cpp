@@ -444,7 +444,7 @@ glmFirstPass(GLMmodel* model, FILE* file)
     char buf[128];
     
     /* make a default group */
-    group = glmAddGroup(model, "default");
+    group = glmAddGroup(model, (char *)"default");
     
     numvertices = numnormals = numtexcoords = numtriangles = 0;
     while(fscanf(file, "%s", buf) != EOF) {
