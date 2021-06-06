@@ -7,7 +7,7 @@
 double eye[] = {0, 0, 1};
 double center[] = {0, 0, 0};
 double up[] = {0, 1, 0};
-char *modelname = "data/al.obj";
+const char *modelname = "data/al.obj";
 
 GLfloat light_ambient[] = {0.0, 0.0, 0.0, 0.0};
 GLfloat light_diffuse[] = {1.0, 1.0, 1.0, 1.0};
@@ -203,7 +203,7 @@ void display(void)
 
 	glPushMatrix();
 	glScalef(1.5, 1.5, 1.5);
-	drawmodel(modelname);
+	drawmodel((char *)modelname);
 	glPopMatrix();
 	glutSwapBuffers();
 }

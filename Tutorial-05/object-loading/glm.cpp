@@ -11,6 +11,11 @@
   
 */
 
+// Disable VS warnings 
+#define strdup _strdup
+#define _CRT_SECURE_NO_WARNINGS
+
+
 
 #include <math.h>
 #include <stdio.h>
@@ -442,7 +447,7 @@ glmFirstPass(GLMmodel* model, FILE* file)
     char buf[128];
     
     /* make a default group */
-    group = glmAddGroup(model, "default");
+    group = glmAddGroup(model, (char*) "default");
     
     numvertices = numnormals = numtexcoords = numtriangles = 0;
     while(fscanf(file, "%s", buf) != EOF) {
