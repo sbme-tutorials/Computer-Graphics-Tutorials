@@ -12,7 +12,10 @@
 */
 
 // Disable VS warnings 
+
+#ifdef _WIN32
 #define strdup _strdup
+#endif
 #define _CRT_SECURE_NO_WARNINGS
 
 
