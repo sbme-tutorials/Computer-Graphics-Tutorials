@@ -1,47 +1,3 @@
-/*
- * Copyright (c) 1993-1997, Silicon Graphics, Inc.
- * ALL RIGHTS RESERVED 
- * Permission to use, copy, modify, and distribute this software for 
- * any purpose and without fee is hereby granted, provided that the above
- * copyright notice appear in all copies and that both the copyright notice
- * and this permission notice appear in supporting documentation, and that 
- * the name of Silicon Graphics, Inc. not be used in advertising
- * or publicity pertaining to distribution of the software without specific,
- * written prior permission. 
- *
- * THE MATERIAL EMBODIED ON THIS SOFTWARE IS PROVIDED TO YOU "AS-IS"
- * AND WITHOUT WARRANTY OF ANY KIND, EXPRESS, IMPLIED OR OTHERWISE,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY OR
- * FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL SILICON
- * GRAPHICS, INC.  BE LIABLE TO YOU OR ANYONE ELSE FOR ANY DIRECT,
- * SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY
- * KIND, OR ANY DAMAGES WHATSOEVER, INCLUDING WITHOUT LIMITATION,
- * LOSS OF PROFIT, LOSS OF USE, SAVINGS OR REVENUE, OR THE CLAIMS OF
- * THIRD PARTIES, WHETHER OR NOT SILICON GRAPHICS, INC.  HAS BEEN
- * ADVISED OF THE POSSIBILITY OF SUCH LOSS, HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE
- * POSSESSION, USE OR PERFORMANCE OF THIS SOFTWARE.
- * 
- * US Government Users Restricted Rights 
- * Use, duplication, or disclosure by the Government is subject to
- * restrictions set forth in FAR 52.227.19(c)(2) or subparagraph
- * (c)(1)(ii) of the Rights in Technical Data and Computer Software
- * clause at DFARS 252.227-7013 and/or in similar or successor
- * clauses in the FAR or the DOD or NASA FAR Supplement.
- * Unpublished-- rights reserved under the copyright laws of the
- * United States.  Contractor/manufacturer is Silicon Graphics,
- * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
- *
- * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
- */
-
-/*
- * robot.c
- * This program shows how to composite modeling transformations
- * to draw translated and rotated hierarchical models.
- * Interaction:  pressing the s and e keys (shoulder and elbow)
- * alters the rotation of the robot arm.
- */
 #include <GL/glut.h>
 #include <stdlib.h>
 
@@ -63,9 +19,12 @@ void display(void)
 {
    glClear(GL_COLOR_BUFFER_BIT);
    glPushMatrix();
+   //Mouse movements
    glRotatef(angle2, 1.0, 0.0, 0.0);
    glRotatef(angle, 0.0, 1.0, 0.0);
    glTranslatef (-1.0, 0.0, 0.0);
+
+   //Shoulder
    glRotatef ((GLfloat) shoulder, 0.0, 0.0, 1.0);
    glTranslatef (1.0, 0.0, 0.0);
    glPushMatrix();
@@ -73,6 +32,8 @@ void display(void)
    glutWireCube (1.0);
    glPopMatrix();
    glTranslatef (1.0, 0.0, 0.0);
+
+   //Elbow
    glRotatef ((GLfloat) elbow, 0.0, 0.0, 1.0);
    glTranslatef (1.0, 0.0, 0.0);
    glPushMatrix();
@@ -80,7 +41,7 @@ void display(void)
    glutWireCube (1.0);
    glPopMatrix();
 
-   //Draw finger flang 1 
+   //Finger phalange 1 
    glTranslatef(1.0, 0.0, 0.0);
    glRotatef((GLfloat)fingerBase, 0.0, 0.0, 1.0);
    glTranslatef(0.15, 0.0, 0.0);
@@ -89,8 +50,7 @@ void display(void)
    glutWireCube(1);
    glPopMatrix();
 
-
-   //Draw finger flang 1 
+   //Finger phalange 2 
    glTranslatef(0.15, 0.0, 0.0);
    glRotatef((GLfloat)fingerUp, 0.0, 0.0, 1.0);
    glTranslatef(0.15, 0.0, 0.0);
@@ -142,11 +102,11 @@ void keyboard(unsigned char key, int x, int y)
       fingerBase = (fingerBase - 5) % 360;
       glutPostRedisplay();
       break;
-      case 'g':
+      case 'p':
       fingerUp = (fingerUp + 5) % 360;
       glutPostRedisplay();
       break;
-   case 'G':
+   case 'P':
       fingerUp = (fingerUp - 5) % 360;
       glutPostRedisplay();
       break;
