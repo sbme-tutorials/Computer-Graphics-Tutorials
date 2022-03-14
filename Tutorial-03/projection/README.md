@@ -1,0 +1,7 @@
+## Build
+
+make 
+
+## Run 
+
+./projection
