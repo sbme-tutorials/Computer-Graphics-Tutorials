@@ -70,7 +70,6 @@ void lookUp()
 
 void lookDown()
 {
-	// Write your code here
 }
 
 // Forward and Backward
@@ -80,7 +79,6 @@ void moveForward()
 
 void moveBackword()
 {
-	// Write your code here
 }
 
 void display(void)
