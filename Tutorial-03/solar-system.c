@@ -35,14 +35,9 @@ void display(void)
     glutWireSphere(1, 20, 16); /* draw sun */
     glRotatef((GLfloat)year, 0.0, 1.0, 0.0);
     glTranslatef(2.0, 0.0, 0.0);
-    
-    // glPushMatrix();
+
     glRotatef((GLfloat)day, 0.0, 1.0, 0.0);
     glutWireSphere(0.2, 20, 8); /* draw smaller planet */
-    // glPopMatrix();
-    
-    glTranslatef(0.5, 0, 0);
-    glutWireSphere(0.1, 20, 8); /* draw smaller moon */
 
     glPopMatrix();
     glutSwapBuffers();
@@ -79,7 +74,7 @@ void reshape(int w, int h)
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(500, 500);
     glutInitWindowPosition(100, 100);
     glutTimerFunc(0, timer, 0);
